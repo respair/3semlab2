@@ -68,32 +68,6 @@ public:
         return SortedSubSeq_ptr;
     }
 
-
-    /*void Add(T item) {
-        int left = 0;
-        int needed = -1;                    // ïðîñòî ïðîèíèöèàëèçèðóåì
-        int right = seq->GetSize() - 1;
-        while (left < right) {
-
-            int mid = left + (right - left) / 2;   //íàøëè ìåæäó íèìè ñðåäíèé
-
-            if (this->cmp(item, seq->Get(mid)))  // åñëè àéòåì áîëüøå ñðåäíåãî, òî ñìîòðèì
-                left = mid + 1;                   // íà ïðàâóþ ÷àñòü
-
-            else if (this->cmp(seq->Get(mid), item))    // åñëè àéòåì ìåíüøå ñðåäíåãî, òî 
-                right = mid;            // ñìîòðèì ëåâóþ ÷àñòü
-
-            else {
-                needed = mid;               // èíà÷å àéòåì ðàâåí seq->Get(mid)
-                right = left - 1;           // ÷òîáû çàêîí÷èòü öèêë
-            }
-        }
-        if (needed == -1)               // íå íàø¸ë ýëåìåíò ñî çíà÷åíèåì àéòåìà  
-            seq->InsertAt(item, left);
-        else                              // íàøåë ýëåìåíò ñ òàêèì æå çíà÷åíèåì(êàê àéòåì)
-            seq->InsertAt(item, needed);
-    }*/
-
     void Add(T item) {
         int i = 0;
         while (i < this->seq->GetSize() && item > this->seq->Get(i))
