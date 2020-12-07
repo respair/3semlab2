@@ -119,10 +119,21 @@ int main() {
 			Split_into_pages ttest(seq, amount, cmp);
 			auto end2 = std::chrono::steady_clock::now();
 			auto elapsed_ms_2 = std::chrono::duration_cast<std::chrono::milliseconds>(end2 - begin2);
-			cout << "Enter the number of the page you want to see, if you want to see all the page enter -1 :" << endl;
+			/*cout << "Enter the number of the page you want to see, if you want to see all the page enter -1 :" << endl;
+			cin >> amount;
+			cout << "_______________________________________________" << endl;
+			if (amount == -1) ttest.PrintAllPages(seq);*/
+			cout << "Enter the number of the page you want to see, if you want to see all the page enter -1." << endl;
+				cout<<"if you want to see the page where the word is, enter -2:" << endl;
 			cin >> amount;
 			cout << "_______________________________________________" << endl;
 			if (amount == -1) ttest.PrintAllPages(seq);
+			else if (amount == -2) {
+				string g;
+				cout << "enter word?" << endl;
+				cin >> g;
+				ttest.PrintHowPage(g);
+			}
 			else ttest.PrintPage(amount, seq);
 			cout << "_______________________________________________" << endl;
 			cout << "Want to know how long it took to split?" << endl;
