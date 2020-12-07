@@ -7,8 +7,8 @@ using namespace std;
 class Split_into_pages {
 private:
 	IDictionary<string, int>* map;
-	int count_ = 0; //кол-во слов на странице
-	int size_ = 0; //кол-во стр
+	int count_ = 0; //ГЄГ®Г«-ГўГ® Г±Г«Г®Гў Г­Г  Г±ГІГ°Г Г­ГЁГ¶ГҐ
+	int size_ = 0; //ГЄГ®Г«-ГўГ® Г±ГІГ°
 public:
 	Split_into_pages(Sequence<string>* seq, int words, int (*cmp)(pair_<string, int>, pair_<string, int>)) {
 		this->map = new IDictionary<string, int>(cmp);
@@ -131,6 +131,9 @@ public:
 				}
 			if (i % 25 == 0 && i > 0) cout << endl;
 		}
+	}
+	void PrintHowPage(string h) {
+		cout << "page: " << this->map->Get(h) << endl;
 	}
 	void PrintAllPages(Sequence<string>* seq) {
 		int i = 1;
