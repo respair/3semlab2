@@ -144,19 +144,6 @@ private:
                  node* tmp = min();
                  branch->data = tmp->data;
                  branch->right = deleter(tmp->data, branch->right);
-                /*node* q = branch->left;
-                node* r = branch->right;
-
-                branch->left = nullptr;
-                branch->right = nullptr;
-                delete branch;*/
-
-               // if (r == nullptr) return q;
-
-               /* node* min_ = min();
-                min_->right = remove_min_el(r);
-                min_->left = q;
-                return balance(min_);*/
             }
         }
         return balance(branch);
@@ -300,25 +287,8 @@ public:
         cout << endl;
     }
 
-    /*BST<T>* eject(node* cur) {
-        BST<T>* new_tree = new BST<T>(this->cmp);
-        return KLP_for_eject(cur, new_tree);
-    }
-    T what_in_node(node* cur) {
-        return cur->data;
-    }*/
     T what_in_node(node* cur) {
         return cur->data;
     }
 };
 
-/*int compare_int_for_BST(int a, int b) {
-    if (a > b)
-        return 1;
-    return 0;
-}*/
-/*template <class T>
-int cmp(T a, T b) {
-    if (a > b) return 1;
-    else return 0;
-}*/
