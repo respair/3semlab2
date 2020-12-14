@@ -1,13 +1,16 @@
 #pragma once
 #include <iostream>
 #include "Sort.hpp"
+#include <stdlib.h>
 using namespace std;
 
 template <class T>
 class BinaryTree {
 private:
     struct node {
+        node(T val) : data(val), height(1), left(nullptr), right(nullptr) {}
         T data;
+        int height;
         node* left = nullptr;
         node* right = nullptr;
     };
@@ -23,32 +26,62 @@ private:
         }
     }
 
-    void inserter(node* tmp, T item) {
-        node* temp = tmp;
-        if (this->cmp(temp->data, item)!=0 && this->cmp(item, temp->data)!=0) {
-            this->count--;
-            return;
+    node* inserter(node* p, T item) {
+        if (!p)
+            return new node(item);
+        if (item < p->data)
+            p->left = inserter(p->left, item);
+        else
+            p->right = inserter(p->right, item);
+        return balance(p);
+    }
+    node* balance(node* p) {
+        fixheight(p);
+
+        if (balance_factor(p) == 2) {
+            if (balance_factor(p->right) < 0)
+                p->right = rotate_right(p->right);
+            return rotate_left(p);
         }
-        else if (this->cmp(temp->data, item)) {
-            if (temp->left != nullptr)
-                inserter(temp->left, item);
-            else {
-                temp->left = new node;
-                temp->left->data = item;
-                temp->left->left = nullptr;
-                temp->left->right = nullptr;
-            }
+
+        if (balance_factor(p) == -2) {
+            if (balance_factor(p->left) > 0)
+                p->left = rotate_left(p->left);
+            return rotate_right(p);
         }
-        else if (this->cmp(item, temp->data)) {
-            if (temp->right != nullptr)
-                inserter(temp->right, item);
-            else {
-                temp->right = new node;
-                temp->right->data = item;
-                temp->right->left = nullptr;
-                temp->right->right = nullptr;
-            }
-        }
+
+        return p;
+    }
+    int balance_factor(node*p) {
+        return height(p->right) - height(p->left);
+    }
+    node* rotate_right(node* p) {
+        //правый поворот вокруг р если разница между высотами равна +-2
+        node* q = p->left; //изначально q левее p
+        p->left = q->right;
+        q->right = p;
+        fixheight(p);
+        fixheight(q);
+
+        return q;
+    }
+    node* rotate_left(node* q) {
+        node* p = q->right;
+        q->right = p->left;
+        p->left = q;
+        fixheight(q);
+        fixheight(p);
+
+        return p;
+    }
+    void fixheight(node* p) {
+        int h_left = height(p->left);        //!
+        int h_right = height(p->right);
+
+        p->height = (h_left > h_right ? h_left : h_right) + 1;
+    }
+    int height(node* p) {
+        return p ? p->height : 0;
     }
 
     node* searcher(T item, node* tmp) {
@@ -90,32 +123,50 @@ private:
         }
 
         else {
-            if (branch->left == nullptr && branch->right == nullptr) { 
+            if (branch->left == nullptr && branch->right == nullptr) {
                 delete branch;
                 branch = nullptr;
                 return branch;
             }
-            else if (branch->left == nullptr &&  branch->right != nullptr) { 
+            else if (branch->left == nullptr && branch->right != nullptr) {
                 node* tmp = branch;
                 branch = branch->right;
                 delete tmp;
-                return branch;
+                return balance(branch);
             }
             else if (branch->right == nullptr && branch->left != nullptr) {
                 node* tmp = branch;
                 branch = branch->left;
                 delete tmp;
-                return branch;
+                return balance(branch);
             }
             else {
-                node* tmp = min();                            
-                branch->data = tmp->data;
-                branch->right = deleter(tmp->data, branch->right);
+                 node* tmp = min();
+                 branch->data = tmp->data;
+                 branch->right = deleter(tmp->data, branch->right);
+                /*node* q = branch->left;
+                node* r = branch->right;
+
+                branch->left = nullptr;
+                branch->right = nullptr;
+                delete branch;*/
+
+               // if (r == nullptr) return q;
+
+               /* node* min_ = min();
+                min_->right = remove_min_el(r);
+                min_->left = q;
+                return balance(min_);*/
             }
         }
-        return branch;
+        return balance(branch);
     }
-
+    node* remove_min_el(node* p) {
+        if (p->left == nullptr)
+            return p->right;
+        p->left = remove_min_el(p->left);
+        return balance(p);
+    }
     /*ArraySequence<T>* LKP_help(node* n, ArraySequence<T>* arr) { ///////////////////////////////////////////////
         node* tmp = n; // KLP
         if (tmp) {
@@ -132,6 +183,23 @@ private:
         return (!this->cmp(tmp->data, tmp_->data) && !this->cmp(tmp_->data, tmp->data)) &&
             sub_(tmp->left, tmp_->left) &&
             sub_(tmp->right, tmp_->right);
+    }
+
+
+    int bsheight(node* p) {
+        int t;
+        if (p == nullptr)
+            return -1;
+        else {
+            t = p->height;
+            return t;
+        }
+    }
+
+   
+    int max(int value1, int value2)
+    {
+        return ((value1 > value2) ? value1 : value2);
     }
 
 public:
@@ -154,8 +222,8 @@ public:
     /*T what_in_root() {
         return this->tree->data;
     }*/
-   
-    node* max() {
+
+    node* Max() {
         node* max = this->tree;
         while (max->right) {
             max = max->right;
@@ -171,20 +239,22 @@ public:
         return min;
     }
 
-   /* ArraySequence<T>* LKP() {
-        ArraySequence<T>* cur = new  ArraySequence<T>(this->count);
-        return LKP_help(this->root, cur);
-    }*/
+    /* ArraySequence<T>* LKP() {
+         ArraySequence<T>* cur = new  ArraySequence<T>(this->count);
+         return LKP_help(this->root, cur);
+     }*/
 
     void insert(T item) {
-        this->count++;
+        //this->count++;
         if (this->tree != nullptr)
-            inserter(this->tree, item);
+            this->tree = inserter(this->tree, item);
         else {
-            this->tree = new node;
-            this->tree->data = item;
-            this->tree->right = nullptr;
-            this->tree->left = nullptr;
+            this->tree = new node(item);
+           // tree->height = 1;
+           // this->tree->data = item;
+           // this->tree->right = nullptr;
+           // this->tree->left = nullptr;
+            this->count++;
         }
     }
 
