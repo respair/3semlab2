@@ -180,12 +180,19 @@ void testIDICTRemove() {
 		string x[20] = { "1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20" };
 		for (int i = 0; i < 20; i++)
 			map->Add(x[i], i);
-		map->Remove(x[10]);
-		for (int i = 0; i < 10; i++)
+		//cout <<x[9]<< map->Get(x[9]) << endl;
+		map->Remove(x[9]);
+		//cout << x[9] << map->Get(x[9]) << endl;
+		for (int i = 0; i < 9; i++) {
+			//std::cout << map->ContainsKey(x[i]) << endl;
+			//cout << x[i] << " " << map->Get(x[i]) << endl;
 			assert(map->Get(x[i]) == i);
-		for (int i = 11; i < 20; i++)
+		}
+		for (int i = 10; i < 20; i++) {
+			//std::cout << map->ContainsKey(x[i]) << " " << x[i] << " " << map->Get(x[i]) << endl;
 			assert(map->Get(x[i]) == i);
-		assert(map->ContainsKey(x[10]) == false);
+		}
+		assert(map->ContainsKey(x[9]) == false);
 		std::cout << "REMOVE: 6 TEST: DONE!" << std::endl;
 	}
 	std::cout << std::endl;
